@@ -1,0 +1,9 @@
+{
+    "name": "com.hans.versiondiff",
+    "displayName": "Unity Scene Diff Visualizer",
+    "version": "0.1.0",
+    "unity": "2022.3",
+    "description": "A Unity Editor tool for visualizing differences between scene or prefab versions (starter MVP).",
+    "keywords": [ "version-control", "scene-diff", "unity-editor" ],
+    "author": { "name": "Hans", "email": "you@example.com" }
+}
