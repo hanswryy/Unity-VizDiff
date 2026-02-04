@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
 
 public class SceneDiffVisualizer : EditorWindow
 {
@@ -8,13 +9,45 @@ public class SceneDiffVisualizer : EditorWindow
     private ParsedScene sceneB;
     private SceneDiffResult result;
 
-    public static void ShowWindow(string scenePathA, string scenePathB)
-    {
-        string yamlA = SceneLoader.LoadSceneText(scenePathA);
-        string yamlB = SceneLoader.LoadSceneText(scenePathB);
+    // get root directory of the repository
+    private static string repoPath = Directory.GetParent(Application.dataPath).FullName;
 
-        var parsedA = SceneParser.Parse(yamlA);
-        var parsedB = SceneParser.Parse(yamlB);
+    public static void ShowWindow(string scenePath)
+    {
+        // Convert asset path to relative path from repo root
+        string relativeScenePath = scenePath;
+        
+        // If scenePath is an asset path (starts with "Assets/"), use it directly
+        // Otherwise, try to make it relative to the repo path
+        if (!scenePath.StartsWith("Assets/"))
+        {
+            string fullScenePath = Path.GetFullPath(scenePath);
+            if (fullScenePath.StartsWith(repoPath))
+            {
+                relativeScenePath = fullScenePath.Substring(repoPath.Length + 1);
+            }
+            else
+            {
+                Debug.LogError($"Scene path '{scenePath}' is not within the repository '{repoPath}'");
+                return;
+            }
+        }
+
+        // Load current git HEAD commit for the repository
+        string yamlHead = GitAdapterClient.GetFile(
+            repoPath,
+            "4424ec9720610937a70f9918e33bd076cc01637c",
+            relativeScenePath
+        );
+
+        string yamlSelected = GitAdapterClient.GetFile(
+            repoPath,
+            "3fdd3320b62c4c13e71b9d0ae0dbd62aa1543390",
+            relativeScenePath
+        );
+
+        var parsedA = SceneParser.Parse(yamlHead);
+        var parsedB = SceneParser.Parse(yamlSelected);
 
         var diff = SceneDiffEngine.Compute(parsedA, parsedB);
 

@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class SceneSelectionWindow : EditorWindow
 {
-    private SceneAsset sceneA;
-    private SceneAsset sceneB;
+    private SceneAsset scene;
 
     [MenuItem("Tools/Scene Diff/Compare Scenes")]
     public static void ShowWindow()
@@ -16,19 +15,16 @@ public class SceneSelectionWindow : EditorWindow
     {
         GUILayout.Label("Select Scenes to Compare", EditorStyles.boldLabel);
 
-        sceneA = (SceneAsset)EditorGUILayout.ObjectField("Scene A", sceneA, typeof(SceneAsset), false);
-        sceneB = (SceneAsset)EditorGUILayout.ObjectField("Scene B", sceneB, typeof(SceneAsset), false);
+        scene = (SceneAsset)EditorGUILayout.ObjectField("Scene", scene, typeof(SceneAsset), false);
 
         EditorGUILayout.Space();
 
-        GUI.enabled = sceneA != null && sceneB != null;
-
+        GUI.enabled = scene != null;
         if (GUILayout.Button("Run Diff"))
         {
-            string pathA = AssetDatabase.GetAssetPath(sceneA);
-            string pathB = AssetDatabase.GetAssetPath(sceneB);
+            string scenePath = AssetDatabase.GetAssetPath(scene);
 
-            SceneDiffVisualizer.ShowWindow(pathA, pathB);
+            SceneDiffVisualizer.ShowWindow(scenePath);
         }
 
         GUI.enabled = true;
