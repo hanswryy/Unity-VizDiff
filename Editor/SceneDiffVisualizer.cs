@@ -36,13 +36,13 @@ public class SceneDiffVisualizer : EditorWindow
         // Load current git HEAD commit for the repository
         string yamlHead = GitAdapterClient.GetFile(
             repoPath,
-            "4424ec9720610937a70f9918e33bd076cc01637c",
+            "4cab37f7c159e038febaa21f386fc0740f5c7b84",
             relativeScenePath
         );
 
         string yamlSelected = GitAdapterClient.GetFile(
             repoPath,
-            "3fdd3320b62c4c13e71b9d0ae0dbd62aa1543390",
+            "f6f2ab80eae25c58418293217513f696a77b0e26",
             relativeScenePath
         );
 
